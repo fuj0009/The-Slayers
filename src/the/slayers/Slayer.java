@@ -28,7 +28,7 @@ public class Slayer implements KeyListener {
 
     public Slayer(TheSlayersUtils utils) {
         this.utils = utils;
-        ImageIcon player = new ImageIcon(this.getClass().getResource("playerD.png"));
+        ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/playerD.png"));
         slayer = player.getImage();
 
         x = new Random().nextInt(1094 - slayer.getWidth(null));
