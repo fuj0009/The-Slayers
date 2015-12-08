@@ -17,15 +17,17 @@ import javax.swing.Timer;
  * @author FUJ0009, GAB0046
  */
 public class TheSlayersUtils extends JPanel implements ActionListener {
-    
+
     private Slayer slayer;
+    private Bot bot;
     private Timer timer;
-  
+
     public TheSlayersUtils() {
         setBackground(Color.black);
         setFocusable(true);
         slayer = new Slayer(this);
         addKeyListener(slayer);
+        bot = new Bot(this);
         timer = new Timer(10, this);
         timer.start();
     }
@@ -33,7 +35,8 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        slayer.drawSlayer(g); 
+        slayer.drawSlayer(g);
+        bot.drawBot(g);
     }
 
     @Override
