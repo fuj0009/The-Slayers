@@ -7,6 +7,7 @@ package the.slayers;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
@@ -16,7 +17,6 @@ import javax.swing.ImageIcon;
  *
  * @author FUJ0009, GAB0046
  */
-
 public class Slayer implements KeyListener {
 
     private TheSlayersUtils utils;
@@ -48,6 +48,14 @@ public class Slayer implements KeyListener {
         }
         if ((y + moveY) < 0 || (y + moveY) > (utils.getHeight() - slayer.getHeight(null))) {
             moveY = 0;
+        }
+        Rectangle slayerR = new Rectangle(x + moveX, y + moveY, slayer.getWidth(null), slayer.getHeight(null));
+
+        for (int i = 0; i < utils.prekazky.length; i++) {
+            if (slayerR.intersects(utils.prekazky[i])) {
+                moveX = 0;
+                moveY = 0;
+            }
         }
 
         x += moveX;
