@@ -5,12 +5,12 @@
  */
 package the.slayers;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -29,6 +29,8 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     private Image prekazka4;
     public Rectangle[] prekazky = new Rectangle[4];
 
+    private ArrayList<Bullets> bullets;
+
     private Slayer slayer;
     private Bot bot;
     private Timer timer;
@@ -43,6 +45,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
         slayer = new Slayer(this);
         addKeyListener(slayer);
         bot = new Bot(this);
+        bullets = new ArrayList<Bullets>();
         timer = new Timer(10, this);
         timer.start();
     }
@@ -57,11 +60,20 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
         g.drawImage(prekazka2, 150, 100, this);
         g.drawImage(prekazka3, 230, 500, this);
         g.drawImage(prekazka4, 880, 100, this);
+
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullets bullet = bullets.get(i);
+            bullet.vykreslit(g);
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         slayer.move();
+        bulletAdd();
+        bulletMove();
+        bulletDelete();
+        botShooting();
         this.repaint();
     }
 
@@ -81,4 +93,60 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
         prekazky[3] = new Rectangle(880, 100, prekazka4.getWidth(null), prekazka4.getHeight(null));
     }
 
+    private void bulletMove() {
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullets bullet = bullets.get(i);
+            bullet.move();
+        }
+    }
+
+    private void bulletAdd() {
+        if (slayer.getShooting()) {
+            Bullets bullet = new Bullets(this, slayer.getX(), slayer.getY(), slayer.getDirection(), slayer.getImage());
+            bullets.add(bullet);
+            slayer.disableShooting();
+        }
+    }
+
+    private void bulletDelete() {
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullets bullet = bullets.get(i);
+            if (bullet.deleting()) {
+                bullets.remove(bullet);
+            }
+        }
+    }
+
+    private void botShooting() {
+        if (bot.BotDelayShooting < 0) {
+            if ((bot.getxEnd() >= slayer.getX() && bot.getxStart() <= slayer.getX())
+                    || (bot.getxEnd() >= slayer.getxEnd() && bot.getxStart() <= slayer.getxEnd())) {
+
+                if (bot.getyStart() > slayer.getY()) {
+
+                    Bullets bullet = new Bullets(this, bot.getxStart(), bot.getyStart(), 'u', bot.getImage());
+                    bullets.add(bullet);
+                } else {
+
+                    Bullets bullet = new Bullets(this, bot.getxStart(), bot.getyStart(), 'd', bot.getImage());
+                    bullets.add(bullet);
+                }
+                bot.BotDelayShooting = 150;
+            }
+
+            if ((bot.getyEnd() >= slayer.getY() && bot.getyStart() <= slayer.getY())
+                    || (bot.getyEnd() >= slayer.getyEnd() && bot.getyStart() <= slayer.getyEnd())) {
+                if (bot.getxStart() > slayer.getX()) {
+                    Bullets bullet = new Bullets(this, bot.getxStart(), bot.getyStart(), 'l', bot.getImage());
+                    bullets.add(bullet);
+                } else {
+                    Bullets bullet = new Bullets(this, bot.getxStart(), bot.getyStart(), 'r', bot.getImage());
+                    bullets.add(bullet);
+                }
+                bot.BotDelayShooting = 150;
+            }
+
+        }
+        bot.BotDelayShooting--;
+    }
 }

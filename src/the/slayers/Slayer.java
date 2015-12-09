@@ -25,6 +25,8 @@ public class Slayer implements KeyListener {
     private int y;
     private int moveX;
     private int moveY;
+    private char lastMovement;
+    private boolean shooting;
 
     public Slayer(TheSlayersUtils utils) {
         this.utils = utils;
@@ -36,6 +38,9 @@ public class Slayer implements KeyListener {
 
         moveX = 0;
         moveY = 0;
+
+        shooting = false;
+        lastMovement = 'l';
     }
 
     public void drawSlayer(Graphics g) {
@@ -73,18 +78,22 @@ public class Slayer implements KeyListener {
         if (key == KeyEvent.VK_UP) {
             moveY = -3;
             moveX = 0;
+            lastMovement = 'u';
         }
         if (key == KeyEvent.VK_DOWN) {
             moveY = 3;
             moveX = 0;
+            lastMovement = 'd';
         }
         if (key == KeyEvent.VK_RIGHT) {
             moveX = 3;
             moveY = 0;
+            lastMovement = 'r';
         }
         if (key == KeyEvent.VK_LEFT) {
             moveX = -3;
             moveY = 0;
+            lastMovement = 'l';
         }
     }
 
@@ -92,5 +101,42 @@ public class Slayer implements KeyListener {
     public void keyReleased(KeyEvent e) {
         moveX = 0;
         moveY = 0;
+
+        int key = e.getKeyCode();
+        if (key == 32) {
+            shooting = true;
+        }
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getxEnd() {
+        return x + slayer.getWidth(null);
+    }
+
+    public int getyEnd() {
+        return y + slayer.getHeight(null);
+    }
+
+    public char getDirection() {
+        return lastMovement;
+    }
+
+    public boolean getShooting() {
+        return shooting;
+    }
+
+    public void disableShooting() {
+        shooting = false;
+    }
+
+    public Image getImage() {
+        return slayer;
     }
 }
