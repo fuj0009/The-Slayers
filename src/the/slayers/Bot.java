@@ -87,4 +87,23 @@ public class Bot {
     public Image getImage() {
         return bot;
     }
+    
+    public void setImage(char x){
+        if(x == 'u'){
+            ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/enemyU.png"));
+            bot = player.getImage();
+        }
+        if(x == 'd'){
+            ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/enemyD.png"));
+            bot = player.getImage();
+        }
+        if(x == 'l'){
+            ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/enemyL.png"));
+            bot = player.getImage();
+        }
+        if(x == 'r'){
+            ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/enemyR.png"));
+            bot = player.getImage();
+        }
+    }
 }
