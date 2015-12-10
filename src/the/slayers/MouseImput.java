@@ -10,7 +10,7 @@ import java.awt.event.MouseListener;
 
 /**
  *
- * @author dfuje
+ * @author FUJ0009, GAB0046
  */
 public class MouseImput implements MouseListener {
     

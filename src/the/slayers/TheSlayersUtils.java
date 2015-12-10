@@ -42,7 +42,6 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     private Timer timer;
 
     public static enum STATE {
-
         MENU,
         SETTING,
         GAME,

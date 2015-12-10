@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
 
 /**
  *
- * @author dfuje
+ * @author FUJ0009, GAB0046
  */
 public class Menu {
     

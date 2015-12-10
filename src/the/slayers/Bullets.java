@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
 
 /**
  *
- * @author Dalibor Fujerík, FUJ0009
+ * @author FUJ0009, GAB0046
  */
 public class Bullets {
 

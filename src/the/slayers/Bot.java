@@ -25,7 +25,7 @@ public class Bot {
 
     public Bot(TheSlayersUtils utils) {
         this.utils = utils;
-        ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/playerD.png"));
+        ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/enemyD.png"));
         bot = player.getImage();
 
         x = new Random().nextInt(1094 - bot.getWidth(null));
