@@ -32,10 +32,35 @@ public class Bot {
         y = new Random().nextInt(671 - bot.getHeight(null));
 
         BotDelayShooting = 150;
+        
+        if(RectangleTest()){
+            newPosition();
+        }
     }
 
     public void drawBot(Graphics g) {
         g.drawImage(bot, x, y, null);
+    }
+    
+    public boolean RectangleTest() {
+
+        for (int i = 0; i < utils.prekazky.length; i++) {
+            if (getRectangle().intersects(utils.prekazky[i])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    public void newPosition() {
+        x = new Random().nextInt(1094 - bot.getWidth(null));
+        y = new Random().nextInt(671 - bot.getHeight(null));
+        
+        while (RectangleTest()) {
+            x = new Random().nextInt(1094 - bot.getWidth(null));
+            y = new Random().nextInt(671 - bot.getHeight(null));
+        }
     }
 
     public int getxStart() {
@@ -52,6 +77,11 @@ public class Bot {
 
     public int getyEnd() {
         return y + bot.getHeight(null);
+    }
+    
+    public Rectangle getRectangle() {
+        Rectangle rectang = new Rectangle(x, y, bot.getWidth(null), bot.getHeight(null));
+        return rectang;
     }
 
     public Image getImage() {

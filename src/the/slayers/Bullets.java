@@ -78,6 +78,11 @@ public class Bullets {
         if (y > utils.getHeight() || y < 0 || x > utils.getWidth() || x < 0) {
             delete = true;
         }
+        for (int i = 0; i < utils.prekazky.length; i++) {
+            if (getRectangle().intersects(utils.prekazky[i])) {
+                delete = true;
+            }
+        }
         return delete;
     }
 

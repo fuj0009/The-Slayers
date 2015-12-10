@@ -39,6 +39,10 @@ public class Slayer implements KeyListener {
         moveX = 0;
         moveY = 0;
 
+        if(RectangleTest()){
+            newPosition();
+        }
+        
         shooting = false;
         lastMovement = 'l';
     }
@@ -47,6 +51,18 @@ public class Slayer implements KeyListener {
         g.drawImage(slayer, x, y, null);
     }
 
+    public boolean RectangleTest() {
+        Rectangle bulanko = new Rectangle(x + moveX, y + moveY, slayer.getWidth(null), slayer.getHeight(null));
+
+        for (int i = 0; i < utils.prekazky.length; i++) {
+            if (bulanko.intersects(utils.prekazky[i])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
     public void move() {
         if ((x + moveX) < 0 || (x + moveX) >= (utils.getWidth() - slayer.getWidth(null))) {
             moveX = 0;
@@ -54,13 +70,10 @@ public class Slayer implements KeyListener {
         if ((y + moveY) < 0 || (y + moveY) > (utils.getHeight() - slayer.getHeight(null))) {
             moveY = 0;
         }
-        Rectangle slayerR = new Rectangle(x + moveX, y + moveY, slayer.getWidth(null), slayer.getHeight(null));
-
-        for (int i = 0; i < utils.prekazky.length; i++) {
-            if (slayerR.intersects(utils.prekazky[i])) {
-                moveX = 0;
-                moveY = 0;
-            }
+        
+        if (RectangleTest()) {
+            moveX = 0;
+            moveY = 0;
         }
 
         x += moveX;
@@ -108,6 +121,16 @@ public class Slayer implements KeyListener {
         }
     }
 
+    public void newPosition() {
+        x = new Random().nextInt(1094 - slayer.getWidth(null));
+        y = new Random().nextInt(671 - slayer.getHeight(null));
+        
+        while (RectangleTest()) {
+            x = new Random().nextInt(1094 - slayer.getWidth(null));
+            y = new Random().nextInt(671 - slayer.getHeight(null));
+        }
+    }
+    
     public int getX() {
         return x;
     }
@@ -138,5 +161,10 @@ public class Slayer implements KeyListener {
 
     public Image getImage() {
         return slayer;
+    }
+    
+    public Rectangle getRectangle() {
+        Rectangle rectang = new Rectangle(x, y, slayer.getWidth(null), slayer.getHeight(null));
+        return rectang;
     }
 }

@@ -31,6 +31,9 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
     private ArrayList<Bullets> bullets;
 
+    private ArrayList<Bot> bots;
+    private int BotTeleporting;
+
     private Slayer slayer;
     private Bot bot;
     private Timer timer;
@@ -44,7 +47,11 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
         slayer = new Slayer(this);
         addKeyListener(slayer);
-        bot = new Bot(this);
+
+        BotTeleporting = 1735;
+        bots = new ArrayList<Bot>();
+        botAdd(3);
+
         bullets = new ArrayList<Bullets>();
         timer = new Timer(10, this);
         timer.start();
@@ -55,7 +62,12 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
         super.paintComponent(g);
         g.drawImage(background, 0, 0, this);
         slayer.drawSlayer(g);
-        bot.drawBot(g);
+
+        for (int i = 0; i < bots.size(); i++) {
+            Bot bot = bots.get(i);
+            bot.drawBot(g);
+        }
+
         g.drawImage(prekazka1, 450, 200, this);
         g.drawImage(prekazka2, 150, 100, this);
         g.drawImage(prekazka3, 230, 500, this);
@@ -73,7 +85,19 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
         bulletAdd();
         bulletMove();
         bulletDelete();
-        botShooting();
+
+        for (int i = 0; i < bots.size(); i++) {
+            Bot bot = bots.get(i);
+            botShooting(bot);
+            botDead(bot);
+            
+            if (BotTeleporting < 0) {
+                bot.newPosition();
+                BotTeleporting = 1735;
+            }
+            BotTeleporting--;
+        }
+
         this.repaint();
     }
 
@@ -117,7 +141,14 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
         }
     }
 
-    private void botShooting() {
+    private void botAdd(int n) {
+        for (int i = 0; i < n; i++) {
+            Bot bot = new Bot(this);
+            bots.add(bot);
+        }
+    }
+
+    private void botShooting(Bot bot) {
         if (bot.BotDelayShooting < 0) {
             if ((bot.getxEnd() >= slayer.getX() && bot.getxStart() <= slayer.getX())
                     || (bot.getxEnd() >= slayer.getxEnd() && bot.getxStart() <= slayer.getxEnd())) {
@@ -131,7 +162,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
                     Bullets bullet = new Bullets(this, bot.getxStart(), bot.getyStart(), 'd', bot.getImage());
                     bullets.add(bullet);
                 }
-                bot.BotDelayShooting = 150;
+                bot.BotDelayShooting = 300;
             }
 
             if ((bot.getyEnd() >= slayer.getY() && bot.getyStart() <= slayer.getY())
@@ -149,4 +180,19 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
         }
         bot.BotDelayShooting--;
     }
+    
+    private void botDead(Bot bot) {
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullets bullet = bullets.get(i);
+            if (bot.getRectangle().intersects(bullet.getRectangle())) {
+                bullets.remove(bullet);
+                bot.newPosition();
+            }
+            if (slayer.getRectangle().intersects(bullet.getRectangle())) {
+                bullets.remove(bullet);
+                slayer.newPosition();
+            }
+        }
+    }
+    
 }
