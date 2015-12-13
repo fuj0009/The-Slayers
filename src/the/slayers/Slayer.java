@@ -39,10 +39,10 @@ public class Slayer implements KeyListener {
         moveX = 0;
         moveY = 0;
 
-        if(RectangleTest()){
+        if (RectangleTest()) {
             newPosition();
         }
-        
+
         shooting = false;
         lastMovement = 'd';
     }
@@ -52,17 +52,22 @@ public class Slayer implements KeyListener {
     }
 
     public boolean RectangleTest() {
-        Rectangle bulanko = new Rectangle(x + moveX, y + moveY, slayer.getWidth(null), slayer.getHeight(null));
+        Rectangle slayr = new Rectangle(x + moveX, y + moveY, slayer.getWidth(null), slayer.getHeight(null));
 
         for (int i = 0; i < utils.prekazky.length; i++) {
-            if (bulanko.intersects(utils.prekazky[i])) {
+            if (slayr.intersects(utils.prekazky[i])) {
                 return true;
             }
         }
-
+        for (int i = 0; i < utils.getBots().size(); i++) {
+            Bot bot = utils.getBots().get(i);
+            if (slayr.intersects(bot.getRectangle())) {
+                return true;
+            }
+        }
         return false;
     }
-    
+
     public void move() {
         if ((x + moveX) < 0 || (x + moveX) >= (utils.getWidth() - slayer.getWidth(null))) {
             moveX = 0;
@@ -70,7 +75,7 @@ public class Slayer implements KeyListener {
         if ((y + moveY) < 0 || (y + moveY) > (utils.getHeight() - slayer.getHeight(null))) {
             moveY = 0;
         }
-        
+
         if (RectangleTest()) {
             moveX = 0;
             moveY = 0;
@@ -122,29 +127,29 @@ public class Slayer implements KeyListener {
     public void keyReleased(KeyEvent e) {
         moveX = 0;
         moveY = 0;
-        
-        if(lastMovement == 'd'){
+
+        if (lastMovement == 'd') {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/playerD.png"));
             slayer = player.getImage();
         }
-        if(lastMovement == 'u'){
+        if (lastMovement == 'u') {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/playerU.png"));
             slayer = player.getImage();
         }
-        if(lastMovement == 'l'){
+        if (lastMovement == 'l') {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/playerL.png"));
             slayer = player.getImage();
         }
-        if(lastMovement == 'r'){
+        if (lastMovement == 'r') {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/playerR.png"));
             slayer = player.getImage();
         }
-        
+
         int key = e.getKeyCode();
         if (key == 32) {
             shooting = true;
         }
-        if(key == 27){
+        if (key == 27) {
             TheSlayersUtils.State = TheSlayersUtils.STATE.MENU;
         }
     }
@@ -152,13 +157,13 @@ public class Slayer implements KeyListener {
     public void newPosition() {
         x = new Random().nextInt(1094 - slayer.getWidth(null));
         y = new Random().nextInt(671 - slayer.getHeight(null));
-        
+
         while (RectangleTest()) {
             x = new Random().nextInt(1094 - slayer.getWidth(null));
             y = new Random().nextInt(671 - slayer.getHeight(null));
         }
     }
-    
+
     public int getX() {
         return x;
     }
@@ -190,7 +195,7 @@ public class Slayer implements KeyListener {
     public Image getImage() {
         return slayer;
     }
-    
+
     public Rectangle getRectangle() {
         Rectangle rectang = new Rectangle(x, y, slayer.getWidth(null), slayer.getHeight(null));
         return rectang;

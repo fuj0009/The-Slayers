@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.Random;
+import java.util.UUID;
 import javax.swing.ImageIcon;
 
 /**
@@ -22,6 +23,7 @@ public class Bot {
     private int x;
     private int y;
     public int BotDelayShooting;
+    String uniqueID = UUID.randomUUID().toString();
 
     public Bot(TheSlayersUtils utils) {
         this.utils = utils;
@@ -32,16 +34,20 @@ public class Bot {
         y = new Random().nextInt(671 - bot.getHeight(null));
 
         BotDelayShooting = 150;
-        
-        if(RectangleTest()){
+
+        if (RectangleTest()) {
             newPosition();
         }
+    }
+
+    public String getUID() {
+        return uniqueID;
     }
 
     public void drawBot(Graphics g) {
         g.drawImage(bot, x, y, null);
     }
-    
+
     public boolean RectangleTest() {
 
         for (int i = 0; i < utils.prekazky.length; i++) {
@@ -49,14 +55,19 @@ public class Bot {
                 return true;
             }
         }
-
+        for (int i = 0; i < utils.getBots().size(); i++) {
+            Bot bot = utils.getBots().get(i);
+            if (getRectangle().intersects(bot.getRectangle()) && uniqueID != bot.getUID()) {
+                return true;
+            }
+        }
         return false;
     }
-    
+
     public void newPosition() {
         x = new Random().nextInt(1094 - bot.getWidth(null));
         y = new Random().nextInt(671 - bot.getHeight(null));
-        
+
         while (RectangleTest()) {
             x = new Random().nextInt(1094 - bot.getWidth(null));
             y = new Random().nextInt(671 - bot.getHeight(null));
@@ -78,7 +89,7 @@ public class Bot {
     public int getyEnd() {
         return y + bot.getHeight(null);
     }
-    
+
     public Rectangle getRectangle() {
         Rectangle rectang = new Rectangle(x, y, bot.getWidth(null), bot.getHeight(null));
         return rectang;
@@ -87,21 +98,21 @@ public class Bot {
     public Image getImage() {
         return bot;
     }
-    
-    public void setImage(char x){
-        if(x == 'u'){
+
+    public void setImage(char x) {
+        if (x == 'u') {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/enemyU.png"));
             bot = player.getImage();
         }
-        if(x == 'd'){
+        if (x == 'd') {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/enemyD.png"));
             bot = player.getImage();
         }
-        if(x == 'l'){
+        if (x == 'l') {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/enemyL.png"));
             bot = player.getImage();
         }
-        if(x == 'r'){
+        if (x == 'r') {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/enemyR.png"));
             bot = player.getImage();
         }
