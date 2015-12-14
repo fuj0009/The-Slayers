@@ -51,6 +51,10 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
     public TheSlayersUtils() {
 
+
+        bots = new ArrayList<Bot>();
+
+
         bots = new ArrayList<Bot>();
 
         ImageIcon back = new ImageIcon(this.getClass().getResource("../pictures/floor.jpg"));
@@ -113,12 +117,12 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
                 Bot bot = bots.get(i);
                 botShooting(bot);
                 botDead(bot);
-
+                //bot.move();
                 if (BotTeleporting < 0) {
-                    bot.newPosition();
-                    BotTeleporting = 1735;
-                }
-                BotTeleporting--;
+                 bot.newPosition();
+                 BotTeleporting = 1735;
+                 }
+                 BotTeleporting--;
             }
         }
         this.repaint();
@@ -173,6 +177,10 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
     public ArrayList<Bot> getBots() {
         return bots;
+    }
+    
+    public Slayer getSlayer() {
+        return slayer;
     }
 
     private void botShooting(Bot bot) {
