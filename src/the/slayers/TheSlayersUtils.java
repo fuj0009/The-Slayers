@@ -28,9 +28,9 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     private Image prekazka3;
     private Image prekazka4;
     public Rectangle[] prekazky = new Rectangle[4];
-    
+
     private Slayer slayer;
-    
+
     private ArrayList<Bullets> bullets;
 
     private ArrayList<Bot> bots;
@@ -42,6 +42,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     private Timer timer;
 
     public static enum STATE {
+
         MENU,
         SETTING,
         GAME,
@@ -49,7 +50,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     public static STATE State = STATE.MENU;
 
     public TheSlayersUtils() {
-         bots = new ArrayList<Bot>();
+        bots = new ArrayList<Bot>();
         ImageIcon back = new ImageIcon(this.getClass().getResource("../pictures/floor.jpg"));
         background = back.getImage();
         setFocusable(true);
@@ -58,11 +59,11 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
         slayer = new Slayer(this);
         addKeyListener(slayer);
-        
+
         addMouseListener(new MouseImput());
 
         BotTeleporting = 1735;
-       
+
         botAdd(3);
 
         bullets = new ArrayList<Bullets>();
@@ -111,12 +112,12 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
                 Bot bot = bots.get(i);
                 botShooting(bot);
                 botDead(bot);
-
+                //bot.move();
                 if (BotTeleporting < 0) {
-                    bot.newPosition();
-                    BotTeleporting = 1735;
-                }
-                BotTeleporting--;
+                 bot.newPosition();
+                 BotTeleporting = 1735;
+                 }
+                 BotTeleporting--;
             }
         }
         this.repaint();
@@ -168,11 +169,15 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
             bots.add(bot);
         }
     }
+
+    public ArrayList<Bot> getBots() {
+        return bots;
+    }
     
-    public ArrayList<Bot> getBots(){
-    return bots;
-}
-    
+    public Slayer getSlayer() {
+        return slayer;
+    }
+
     private void botShooting(Bot bot) {
         if (bot.BotDelayShooting < 0) {
             if ((bot.getxEnd() >= slayer.getX() && bot.getxStart() <= slayer.getX())

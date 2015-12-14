@@ -22,7 +22,11 @@ public class Bot {
     private Image bot;
     private int x;
     private int y;
+    private int moveX;
+    private int moveY;
     public int BotDelayShooting;
+    private int pohyb;
+    private int zmenaPohyb;
     String uniqueID = UUID.randomUUID().toString();
 
     public Bot(TheSlayersUtils utils) {
@@ -30,9 +34,12 @@ public class Bot {
         ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/enemyD.png"));
         bot = player.getImage();
 
+        pohyb = new Random().nextInt(4) + 1;
         x = new Random().nextInt(1094 - bot.getWidth(null));
         y = new Random().nextInt(671 - bot.getHeight(null));
-
+        moveX = 0;
+        moveY = 0;
+        zmenaPohyb = 300;
         BotDelayShooting = 150;
 
         if (RectangleTest()) {
@@ -49,15 +56,20 @@ public class Bot {
     }
 
     public boolean RectangleTest() {
+        Rectangle botO = new Rectangle(x + moveX, y + moveY, bot.getWidth(null), bot.getHeight(null));
+
+        if (utils.getSlayer().getRectangle().intersects(botO)) {
+            return true;
+        }
 
         for (int i = 0; i < utils.prekazky.length; i++) {
-            if (getRectangle().intersects(utils.prekazky[i])) {
+            if (botO.intersects(utils.prekazky[i])) {
                 return true;
             }
         }
         for (int i = 0; i < utils.getBots().size(); i++) {
             Bot bot = utils.getBots().get(i);
-            if (getRectangle().intersects(bot.getRectangle()) && uniqueID != bot.getUID()) {
+            if (botO.intersects(bot.getRectangle()) && uniqueID != bot.getUID()) {
                 return true;
             }
         }
@@ -72,6 +84,53 @@ public class Bot {
             x = new Random().nextInt(1094 - bot.getWidth(null));
             y = new Random().nextInt(671 - bot.getHeight(null));
         }
+    }
+
+    public void move() {
+        zmenaPohyb--;
+        switch (pohyb) {
+            //hore
+            case 1:
+                moveY = -1;
+                moveX = 0;
+                break;
+            //dole
+            case 2:
+                moveY = 1;
+                moveX = 0;
+                break;
+            //do lava
+            case 3:
+                moveX = -1;
+                moveY = 0;
+                break;
+            //do prava
+            case 4:
+                moveX = 1;
+                moveY = 0;
+                break;
+        }
+        if ((x + moveX) < 0 || (x + moveX) >= (utils.getWidth() - bot.getWidth(null))) {
+            moveX = 0;
+            pohyb = new Random().nextInt(4) + 1;
+        }
+        if ((y + moveY) < 0 || (y + moveY) > (utils.getHeight() - bot.getHeight(null))) {
+            moveY = 0;
+            pohyb = new Random().nextInt(4) + 1;
+        }
+
+        if (RectangleTest()) {
+            moveX = 0;
+            moveY = 0;
+            pohyb = new Random().nextInt(4) + 1;
+        }
+        if (zmenaPohyb < 0) {
+            pohyb = new Random().nextInt(4) + 1;
+            zmenaPohyb = 300;
+        }
+
+        x += moveX;
+        y += moveY;
     }
 
     public int getxStart() {
