@@ -13,37 +13,37 @@ import javax.swing.ImageIcon;
  *
  * @author FUJ0009, GAB0046
  */
-public class Slayer extends BaseSlayer implements KeyListener {
+public class Slayer2 extends BaseSlayer implements KeyListener {
 
-    public Slayer(TheSlayersUtils utils) {
-        super(utils, "../pictures/playerD.png");
+    public Slayer2(TheSlayersUtils utils) {
+        super(utils, "../pictures/enemyD.png");
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_UP) {
+        if (key == KeyEvent.VK_W) {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/playerU.gif"));
             slayer = player.getImage();
             moveY = -3;
             moveX = 0;
             lastMovement = 'u';
         }
-        if (key == KeyEvent.VK_DOWN) {
+        if (key == KeyEvent.VK_S) {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/playerD.gif"));
             slayer = player.getImage();
             moveY = 3;
             moveX = 0;
             lastMovement = 'd';
         }
-        if (key == KeyEvent.VK_RIGHT) {
+        if (key == KeyEvent.VK_D) {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/playerR.gif"));
             slayer = player.getImage();
             moveX = 3;
             moveY = 0;
             lastMovement = 'r';
         }
-        if (key == KeyEvent.VK_LEFT) {
+        if (key == KeyEvent.VK_A) {
             ImageIcon player = new ImageIcon(this.getClass().getResource("../pictures/playerL.gif"));
             slayer = player.getImage();
             moveX = -3;
