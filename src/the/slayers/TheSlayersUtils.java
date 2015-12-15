@@ -29,7 +29,8 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     private Image prekazka4;
     public Rectangle[] prekazky = new Rectangle[4];
 
-    private Slayer slayer;
+    private BaseSlayer slayer;
+    private BaseSlayer slayer2;
 
     private ArrayList<Bullets> bullets;
 
@@ -37,6 +38,9 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     private int BotTeleporting;
 
     private Menu menu;
+    public boolean single;
+    public boolean multi;
+    public boolean zombieB;
 
     private Bot bot;
     private Timer timer;
@@ -44,27 +48,33 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     public static enum STATE {
 
         MENU,
-        SETTING,
+        START,
         GAME,
     };
     public static STATE State = STATE.MENU;
 
     public TheSlayersUtils() {
+        init();
+        start();
+    }
 
-
-        bots = new ArrayList<Bot>();
-
-
-        bots = new ArrayList<Bot>();
-
+    private void init() {
         ImageIcon back = new ImageIcon(this.getClass().getResource("../pictures/floor.jpg"));
         background = back.getImage();
         setFocusable(true);
+    }
 
+    private void start() {
+        bots = new ArrayList<Bot>();
         addPrekazky();
 
         slayer = new Slayer(this);
         addKeyListener(slayer);
+
+        if (multi) {
+            slayer2 = new Slayer2(this);
+            addKeyListener(slayer2);
+        }
 
         addMouseListener(new MouseImput());
 
@@ -73,7 +83,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
         bullets = new ArrayList<Bullets>();
 
-        menu = new Menu();
+        menu = new Menu(this);
 
         timer = new Timer(10, this);
         timer.start();
@@ -83,12 +93,27 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (State == STATE.GAME) {
-            g.drawImage(background, 0, 0, this);
-            slayer.drawSlayer(g);
 
-            for (int i = 0; i < bots.size(); i++) {
-                Bot bot = bots.get(i);
-                bot.drawBot(g);
+            g.drawImage(background, 0, 0, this);
+
+            if (single) {
+                slayer.drawSlayer(g);
+
+                for (int i = 0; i < bots.size(); i++) {
+                    Bot bot = bots.get(i);
+                    bot.drawBot(g);
+                }
+
+            } else { //multi
+                slayer.drawSlayer(g);
+                slayer2.drawSlayer(g);
+
+                if (zombieB) {
+                    for (int i = 0; i < bots.size(); i++) {
+                        Bot bot = bots.get(i);
+                        bot.drawBot(g);
+                    }
+                }
             }
 
             g.drawImage(prekazka1, 450, 200, this);
@@ -107,23 +132,55 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (State == STATE.START) {
+            State = STATE.GAME;
+            timer.stop();
+            this.start();
+        }
+
         if (State == STATE.GAME) {
-            slayer.move();
-            bulletAdd();
+
+            if (single) {
+                slayer.move();
+                this.deadS(slayer);
+                bulletAdd(slayer);
+                for (int i = 0; i < bots.size(); i++) {
+                    Bot bot = bots.get(i);
+                    botShooting(bot, slayer);
+                    dead(bot);
+                    if (zombieB) {
+                        bot.move();
+                    } else {
+                        if (BotTeleporting < 0) {
+                            bot.newPosition();
+                            BotTeleporting = 1735;
+                        }
+                        BotTeleporting--;
+                    }
+                }
+            } else { // multi
+                slayer.move();
+                bulletAdd(slayer);
+                this.deadS(slayer);
+                slayer2.move();
+                bulletAdd(slayer2);
+                this.deadS(slayer2);
+                if (zombieB) {
+                    for (int i = 0; i < bots.size(); i++) {
+                        Bot bot = bots.get(i);
+                        botShooting(bot, slayer);
+                        botShooting(bot, slayer2);
+
+                        dead(bot);
+                        bot.move();
+                    }
+                }
+            }
+
             bulletMove();
             bulletDelete();
-
-            for (int i = 0; i < bots.size(); i++) {
-                Bot bot = bots.get(i);
-                botShooting(bot);
-                botDead(bot);
-                //bot.move();
-                if (BotTeleporting < 0) {
-                 bot.newPosition();
-                 BotTeleporting = 1735;
-                 }
-                 BotTeleporting--;
-            }
+        } else {
+            menu.setting();
         }
         this.repaint();
     }
@@ -151,11 +208,11 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
         }
     }
 
-    private void bulletAdd() {
-        if (slayer.getShooting()) {
-            Bullets bullet = new Bullets(this, slayer.getX(), slayer.getY(), slayer.getDirection(), slayer.getImage());
+    private void bulletAdd(BaseSlayer slay) {
+        if (slay.getShooting()) {
+            Bullets bullet = new Bullets(this, slay.getX(), slay.getY(), slay.getDirection(), slay.getImage());
             bullets.add(bullet);
-            slayer.disableShooting();
+            slay.disableShooting();
         }
     }
 
@@ -178,17 +235,21 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     public ArrayList<Bot> getBots() {
         return bots;
     }
-    
-    public Slayer getSlayer() {
+
+    public BaseSlayer getSlayer() {
         return slayer;
     }
 
-    private void botShooting(Bot bot) {
-        if (bot.BotDelayShooting < 0) {
-            if ((bot.getxEnd() >= slayer.getX() && bot.getxStart() <= slayer.getX())
-                    || (bot.getxEnd() >= slayer.getxEnd() && bot.getxStart() <= slayer.getxEnd())) {
+    public BaseSlayer getSlayer2() {
+        return slayer2;
+    }
 
-                if (bot.getyStart() > slayer.getY()) {
+    private void botShooting(Bot bot, BaseSlayer slay) {
+        if (bot.BotDelayShooting < 0) {
+            if ((bot.getxEnd() >= slay.getX() && bot.getxStart() <= slay.getX())
+                    || (bot.getxEnd() >= slay.getxEnd() && bot.getxStart() <= slay.getxEnd())) {
+
+                if (bot.getyStart() > slay.getY()) {
                     bot.setImage('u');
                     Bullets bullet = new Bullets(this, bot.getxStart(), bot.getyStart(), 'u', bot.getImage());
                     bullets.add(bullet);
@@ -200,9 +261,9 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
                 bot.BotDelayShooting = 300;
             }
 
-            if ((bot.getyEnd() >= slayer.getY() && bot.getyStart() <= slayer.getY())
-                    || (bot.getyEnd() >= slayer.getyEnd() && bot.getyStart() <= slayer.getyEnd())) {
-                if (bot.getxStart() > slayer.getX()) {
+            if ((bot.getyEnd() >= slay.getY() && bot.getyStart() <= slay.getY())
+                    || (bot.getyEnd() >= slay.getyEnd() && bot.getyStart() <= slay.getyEnd())) {
+                if (bot.getxStart() > slay.getX()) {
                     bot.setImage('l');
                     Bullets bullet = new Bullets(this, bot.getxStart(), bot.getyStart(), 'l', bot.getImage());
                     bullets.add(bullet);
@@ -218,17 +279,24 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
         bot.BotDelayShooting--;
     }
 
-    private void botDead(Bot bot) {
+    private void dead(Bot bot) {
         for (int i = 0; i < bullets.size(); i++) {
             Bullets bullet = bullets.get(i);
             if (bot.getRectangle().intersects(bullet.getRectangle())) {
                 bullets.remove(bullet);
                 bot.newPosition();
             }
-            if (slayer.getRectangle().intersects(bullet.getRectangle())) {
+        }
+    }
+    
+    private void deadS(BaseSlayer slay) {
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullets bullet = bullets.get(i);
+            if (slay.getRectangle().intersects(bullet.getRectangle())) {
                 bullets.remove(bullet);
-                slayer.newPosition();
+                slay.newPosition();
             }
+ 
         }
     }
 

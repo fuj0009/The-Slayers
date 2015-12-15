@@ -53,12 +53,12 @@ public class MouseImput implements MouseListener {
                     if(Menu.single){
                         Menu.singN = true;
                         Menu.multN = false;
-                        
-                        TheSlayersUtils.State = TheSlayersUtils.STATE.GAME;
+                        Menu.click = true;
                     }
                     else{
                         Menu.singN = false;
                         Menu.multN = true;
+                        Menu.click = true;
                     }
                 }
                 //hard
@@ -66,10 +66,12 @@ public class MouseImput implements MouseListener {
                     if(Menu.single){
                         Menu.singH = true;
                         Menu.multH = false;
+                        Menu.click = true;
                     }
                     else{
                         Menu.singH = false;
                         Menu.multH = true;
+                        Menu.click = true;
                     }
                 }
                 //instruction

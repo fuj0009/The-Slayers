@@ -17,7 +17,7 @@ import javax.swing.ImageIcon;
  *
  * @author FUJ0009, GAB0046
  */
-public abstract class BaseSlayer {
+public abstract class BaseSlayer implements KeyListener {
 
     private TheSlayersUtils utils;
     protected Image slayer;
@@ -59,10 +59,12 @@ public abstract class BaseSlayer {
                 return true;
             }
         }
-        for (int i = 0; i < utils.getBots().size(); i++) {
-            Bot bot = utils.getBots().get(i);
-            if (slayr.intersects(bot.getRectangle())) {
-                return true;
+        if (utils.single) {
+            for (int i = 0; i < utils.getBots().size(); i++) {
+                Bot bot = utils.getBots().get(i);
+                if (slayr.intersects(bot.getRectangle())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -80,20 +82,10 @@ public abstract class BaseSlayer {
             moveX = 0;
             moveY = 0;
         }
-
+        System.out.println(moveX);
         x += moveX;
         y += moveY;
     }
-
-    //@Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    //@Override
-    public abstract void keyPressed(KeyEvent e);
-
-    //@Override
-    public abstract void keyReleased(KeyEvent e);
 
     public void newPosition() {
         x = new Random().nextInt(1094 - slayer.getWidth(null));

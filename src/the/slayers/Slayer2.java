@@ -13,7 +13,7 @@ import javax.swing.ImageIcon;
  *
  * @author FUJ0009, GAB0046
  */
-public class Slayer2 extends BaseSlayer implements KeyListener {
+public class Slayer2 extends BaseSlayer{
 
     public Slayer2(TheSlayersUtils utils) {
         super(utils, "../pictures/enemyD.png");
@@ -75,12 +75,17 @@ public class Slayer2 extends BaseSlayer implements KeyListener {
         }
 
         int key = e.getKeyCode();
-        if (key == 32) {
+        if (key == 17) {
             shooting = true;
         }
         if (key == 27) {
             TheSlayersUtils.State = TheSlayersUtils.STATE.MENU;
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        
     }
     
 }
