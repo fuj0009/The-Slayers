@@ -59,7 +59,7 @@ public abstract class BaseSlayer implements KeyListener {
                 return true;
             }
         }
-        if (utils.single) {
+        if (utils.single || (utils.multi && utils.zombieB)) {
             for (int i = 0; i < utils.getBots().size(); i++) {
                 Bot bot = utils.getBots().get(i);
                 if (slayr.intersects(bot.getRectangle())) {
