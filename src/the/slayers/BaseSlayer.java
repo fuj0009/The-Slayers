@@ -50,10 +50,11 @@ public abstract class BaseSlayer implements KeyListener {
     public void drawSlayer(Graphics g) {
         g.drawImage(slayer, x, y, null);
     }
-
+    
     public boolean RectangleTest() {
-        Rectangle slayr = new Rectangle(x + moveX, y + moveY, slayer.getWidth(null), slayer.getHeight(null));
 
+        Rectangle slayr = new Rectangle(x + moveX, y + moveY, slayer.getWidth(null), slayer.getHeight(null));
+      
         for (int i = 0; i < utils.prekazky.length; i++) {
             if (slayr.intersects(utils.prekazky[i])) {
                 return true;
@@ -67,10 +68,22 @@ public abstract class BaseSlayer implements KeyListener {
                 }
             }
         }
+       
+            if ((utils.multi || (utils.multi && utils.zombieB)) && utils.getSlayer() != null && utils.getSlayer2() != null) {
+                BaseSlayer slayer1 = utils.getSlayer();
+                Rectangle slayr1 = new Rectangle(slayer1.x + slayer1.moveX, slayer1.y + slayer1.moveY, slayer.getWidth(null), slayer.getHeight(null));
+                BaseSlayer slayer2 = utils.getSlayer2();
+                Rectangle slayr2 = new Rectangle(slayer2.x + slayer2.moveX, slayer2.y + slayer2.moveY, slayer.getWidth(null), slayer.getHeight(null));
+                if (slayr1.intersects(slayr2)) {
+                    return true;
+                }
+            }
+        
         return false;
     }
 
     public void move() {
+
         if ((x + moveX) < 0 || (x + moveX) >= (utils.getWidth() - slayer.getWidth(null))) {
             moveX = 0;
         }
@@ -82,7 +95,7 @@ public abstract class BaseSlayer implements KeyListener {
             moveX = 0;
             moveY = 0;
         }
-        System.out.println(moveX);
+        
         x += moveX;
         y += moveY;
     }

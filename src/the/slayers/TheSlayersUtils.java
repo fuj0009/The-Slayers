@@ -132,6 +132,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        
         if (State == STATE.START) {
             State = STATE.GAME;
             timer.stop();
