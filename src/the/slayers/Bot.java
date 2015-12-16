@@ -88,28 +88,38 @@ public class Bot {
 
     public void move() {
         zmenaPohyb--;
+        ImageIcon zombie;
         switch (pohyb) {
             //hore
             case 1:
+                zombie = new ImageIcon(this.getClass().getResource("../pictures/zombieU.gif"));
+                bot = zombie.getImage();
                 moveY = -1;
                 moveX = 0;
                 break;
             //dole
             case 2:
+                zombie = new ImageIcon(this.getClass().getResource("../pictures/zombieD.gif"));
+                bot = zombie.getImage();
                 moveY = 1;
                 moveX = 0;
                 break;
             //do lava
             case 3:
+                zombie = new ImageIcon(this.getClass().getResource("../pictures/zombieL.gif"));
+                bot = zombie.getImage();
                 moveX = -1;
                 moveY = 0;
                 break;
             //do prava
             case 4:
+                zombie = new ImageIcon(this.getClass().getResource("../pictures/zombieR.gif"));
+                bot = zombie.getImage();
                 moveX = 1;
                 moveY = 0;
                 break;
         }
+        
         if ((x + moveX) < 0 || (x + moveX) >= (utils.getWidth() - bot.getWidth(null))) {
             moveX = 0;
             pohyb = new Random().nextInt(4) + 1;

@@ -13,7 +13,7 @@ import java.awt.event.MouseListener;
  * @author FUJ0009, GAB0046
  */
 public class MouseImput implements MouseListener {
-    
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -30,7 +30,7 @@ public class MouseImput implements MouseListener {
                 if (mx > 153 && mx < 463) {
                     Menu.single = true;
                     Menu.multi = false;
-                    
+
                     Menu.singI = false;
                     Menu.multI = false;
                 }
@@ -38,7 +38,7 @@ public class MouseImput implements MouseListener {
                 if (mx > 470 && mx < 780) {
                     Menu.single = false;
                     Menu.multi = true;
-                    
+
                     Menu.singI = false;
                     Menu.multI = false;
                 }
@@ -50,12 +50,11 @@ public class MouseImput implements MouseListener {
             if (my > 585 && my < 662) {
                 //normal
                 if (mx > 127 && mx < 417) {
-                    if(Menu.single){
+                    if (Menu.single) {
                         Menu.singN = true;
                         Menu.multN = false;
                         Menu.click = true;
-                    }
-                    else{
+                    } else {
                         Menu.singN = false;
                         Menu.multN = true;
                         Menu.click = true;
@@ -63,12 +62,11 @@ public class MouseImput implements MouseListener {
                 }
                 //hard
                 if (mx > 420 && mx < 652) {
-                    if(Menu.single){
+                    if (Menu.single) {
                         Menu.singH = true;
                         Menu.multH = false;
                         Menu.click = true;
-                    }
-                    else{
+                    } else {
                         Menu.singH = false;
                         Menu.multH = true;
                         Menu.click = true;
@@ -76,14 +74,24 @@ public class MouseImput implements MouseListener {
                 }
                 //instruction
                 if (mx > 655 && mx < 982) {
-                    if(Menu.single){
+                    if (Menu.single) {
                         Menu.singI = true;
                         Menu.multI = false;
-                    }
-                    else{
+                    } else {
                         Menu.singI = false;
                         Menu.multI = true;
+                        Menu.slay1 = false;
+                        Menu.slay2 = false;
                     }
+                }
+            }
+            //instruction multiplayer
+            if (my > 80 && 475 > my && Menu.multI) {
+                if (mx > 230 && 510 > mx) {
+                    Menu.slay1 = true;
+                }
+                if (mx > 595 && 875 > mx) {
+                    Menu.slay2 = true;
                 }
             }
         }

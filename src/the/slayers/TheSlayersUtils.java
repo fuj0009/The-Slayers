@@ -31,6 +31,8 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
     private BaseSlayer slayer;
     private BaseSlayer slayer2;
+    private int slayer1Deads;
+    private int slayer2Deads;
 
     private ArrayList<Bullets> bullets;
 
@@ -70,10 +72,12 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
         slayer = new Slayer(this);
         addKeyListener(slayer);
+        slayer1Deads = 0;
 
         if (multi) {
             slayer2 = new Slayer2(this);
             addKeyListener(slayer2);
+            slayer2Deads = 0;
         }
 
         addMouseListener(new MouseImput());
@@ -165,7 +169,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
                 this.deadS(slayer);
                 slayer2.move();
                 bulletAdd(slayer2);
-                this.deadS(slayer2);
+                this.deadS2(slayer2);
                 if (zombieB) {
                     for (int i = 0; i < bots.size(); i++) {
                         Bot bot = bots.get(i);
@@ -296,6 +300,19 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
             if (slay.getRectangle().intersects(bullet.getRectangle())) {
                 bullets.remove(bullet);
                 slay.newPosition();
+                slayer1Deads ++;
+            }
+ 
+        }
+    }
+    
+    private void deadS2(BaseSlayer slay) {
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullets bullet = bullets.get(i);
+            if (slay.getRectangle().intersects(bullet.getRectangle())) {
+                bullets.remove(bullet);
+                slay.newPosition();
+                slayer2Deads ++;
             }
  
         }

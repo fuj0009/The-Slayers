@@ -8,6 +8,7 @@ package the.slayers;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
 /**
@@ -19,7 +20,7 @@ public class Menu {
     private TheSlayersUtils utils;
     private Image menu;
     private MouseImput mouse;
-
+    
     public static boolean click;
 
     public static boolean single;
@@ -32,6 +33,9 @@ public class Menu {
     public static boolean multN;
     public static boolean multH;
     public static boolean multI;
+    
+    public static boolean slay1;
+    public static boolean slay2;
 
     public Menu(TheSlayersUtils utils) {
         this.utils = utils;
@@ -49,6 +53,9 @@ public class Menu {
         multN = false;
         multH = false;
         multI = false;
+        
+        slay1 = false;
+        slay2 = false;
     }
 
     public void draw(Graphics g) {
@@ -65,7 +72,18 @@ public class Menu {
             ImageIcon back = new ImageIcon(this.getClass().getResource("../pictures/SingleI.png"));
             menu = back.getImage();
         }
-
+        if (multI) {
+            ImageIcon back = new ImageIcon(this.getClass().getResource("../pictures/IMPH.png"));
+            menu = back.getImage();
+            if(slay1){
+                back = new ImageIcon(this.getClass().getResource("../pictures/IMP1.png"));
+                menu = back.getImage();
+            }
+            if(slay2){
+                back = new ImageIcon(this.getClass().getResource("../pictures/IMP2.png"));
+                menu = back.getImage();
+            }
+        }
         g.drawImage(menu, 0, 0, null);
     }
 
