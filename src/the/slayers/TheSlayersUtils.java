@@ -5,6 +5,8 @@
  */
 package the.slayers;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -33,6 +35,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
     private BaseSlayer slayer2;
     private int slayer1Deads;
     private int slayer2Deads;
+    private int slayerKill;
 
     private ArrayList<Bullets> bullets;
 
@@ -46,6 +49,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
     private Bot bot;
     private Timer timer;
+    private int TimeGame;
 
     public static enum STATE {
 
@@ -54,6 +58,8 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
         GAME,
     };
     public static STATE State = STATE.MENU;
+    
+    private static final Font large = new Font("Tahoma", Font.BOLD, 25);
 
     public TheSlayersUtils() {
         init();
@@ -73,6 +79,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
         slayer = new Slayer(this);
         addKeyListener(slayer);
         slayer1Deads = 0;
+        slayerKill = 0;
 
         if (multi) {
             slayer2 = new Slayer2(this);
@@ -89,6 +96,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
         menu = new Menu(this);
 
+        TimeGame = 600;
         timer = new Timer(10, this);
         timer.start();
     }
@@ -131,6 +139,9 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
             }
         } else if (State == STATE.MENU) {
             menu.draw(g);
+            g.setFont(large);
+            g.setColor(Color.WHITE);
+            g.drawString("Posledna hra " + String.valueOf(slayerKill) + " : " + String.valueOf(slayer1Deads), 0, 25);
         }
     }
 
@@ -184,9 +195,16 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
 
             bulletMove();
             bulletDelete();
+            TimeGame --;
         } else {
             menu.setting();
         }
+        
+        if(TimeGame <= 0){
+            State = STATE.MENU;
+            TimeGame = 600;
+        }
+        
         this.repaint();
     }
 
@@ -290,6 +308,7 @@ public class TheSlayersUtils extends JPanel implements ActionListener {
             if (bot.getRectangle().intersects(bullet.getRectangle())) {
                 bullets.remove(bullet);
                 bot.newPosition();
+                slayerKill++;
             }
         }
     }
